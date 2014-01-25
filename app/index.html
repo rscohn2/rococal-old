@@ -8,10 +8,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>rococal</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
+        <link rel="stylesheet" type="text/css" href="bower_components/intel-appframework/css/icons.css" />
+        <link rel="stylesheet" type="text/css" href="bower_components/intel-appframework/css/af.ui.css" />
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -25,34 +29,43 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-
-        <div class="container">
-            <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
+            <div id="afui"> <!-- this is the main container div.  This way, you can have only part of your app use UI -->
+            <!-- this is the header div at the top -->
+            <div id="header">
+                <a href="javascript:$.ui.toggleSideMenu()" class="button" style="float:right">Toggle Nav</a>
+            </div>
+            <div id="content">
+                <!-- here is where you can add your panels -->
+                <div title='All Events' id="allEvents" class="panel" selected="true">
+                    <ul id="allEventsList" class="list">
+                    </ul>                
+                </div>
+                <div title='Selected Events' id="selectedEvents" class="panel">
+                </div>
+                <div title='Settings' id="settings" class="panel">
+                    <a href='#' id='authorize-button' onclick='handleAuthClick();'>Login</a>
+                </div>
+                <div title="Details" id="details" class="panel">
+                </div>
+            </div>
+            <!-- bottom navbar. Add additional tabs here -->
+            <div id="navbar">
+                <div class="horzRule"></div>
+                <a href="#allEvents" id='navbar_home' class='icon calendar'>All</a>
+                <a href="#selectedEvents" id='navbar_home' class='icon check'>Selected</a>  
+                <a href="#settings" id='navbar_home' class='icon settings'>Settings</a>
+            </div>
+            <!-- this is the default left side nav menu.  If you do not want any, do not include these -->
+            <nav>
+                <div class='title'>Home</div>
+                <ul>
+                    <li >
+                        <a  class="icon home mini" href="#main">Selectors</a>
+                    </li>
                 </ul>
-                <h3 class="text-muted">rococal</h3>
-            </div>
-
-            <div class="jumbotron">
-                <h1>'Allo, 'Allo!</h1>
-                <p class="lead">Always a pleasure scaffolding your apps.</p>
-                <p><a class="btn btn-lg btn-success" href="#">Splendid!</a></p>
-            </div>
-
-            <div class="row marketing">
-              <div id='content'>
-                <h1>Events</h1>
-                <ul id='events'></ul>
-              </div>
-              <a href='#' id='authorize-button' onclick='handleAuthClick();'>Login</a>
-            </div>
-
-            <div class="footer">
-                <p>♥ from the Yeoman team</p>
-            </div>
+            </nav>
+        </div>
+            
 
         </div>
 
@@ -60,6 +73,9 @@
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/intel-appframework/jq.appframework.js"></script>
+        <script src="bower_components/intel-appframework/ui/appframework.ui.js"></script>
+        <script src="bower_components/mustache/mustache.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -77,21 +93,6 @@
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 
-        <!-- build:js scripts/plugins.js -->
-        <script src="bower_components/sass-bootstrap/js/affix.js"></script>
-        <script src="bower_components/sass-bootstrap/js/alert.js"></script>
-        <script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
-        <script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
-        <script src="bower_components/sass-bootstrap/js/modal.js"></script>
-        <script src="bower_components/sass-bootstrap/js/transition.js"></script>
-        <script src="bower_components/sass-bootstrap/js/button.js"></script>
-        <script src="bower_components/sass-bootstrap/js/popover.js"></script>
-        <script src="bower_components/sass-bootstrap/js/carousel.js"></script>
-        <script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
-        <script src="bower_components/sass-bootstrap/js/collapse.js"></script>
-        <script src="bower_components/sass-bootstrap/js/tab.js"></script>
-        <!-- endbuild -->
-        <script src="js/cal.js"></script>
         <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </body>
 </html>
