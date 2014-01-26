@@ -28,8 +28,11 @@ document.addEventListener("intel.xdk.device.ready", onDeviceReady, false);
 
 var viewMgr = new ViewMgr();
 var eventMgr = new EventMgr();
+var gcalMgr = new GCalMgr();
 
-
+var handleClientLoad = function() {
+    gcalMgr.handleClientLoad();
+}
 
 
 

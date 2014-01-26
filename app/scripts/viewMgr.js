@@ -41,3 +41,8 @@ ViewMgr.prototype.refresh = function() {
     self.renderEventList();
 }
 
+ViewMgr.prototype.refreshDetails = function(id) {
+    var self = this;
+    console.log('Details loaded: ' + id);
+}
+

@@ -1,48 +1,55 @@
-var clientId = '327144861423-qvti1t2nnfa1o4n0d2eo9ra3td3ahi01.apps.googleusercontent.com';
-//var apiKey = 'ZKD2IYG6YpL1X5h7LobqPi3Z';
-var scopes = 'https://www.googleapis.com/auth/calendar';
-
-function handleClientLoad() {
-  window.setTimeout(checkAuth,1);
-  checkAuth();
-}
-
-function checkAuth() {
-  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},
-      handleAuthResult);
-}
-
-var authDone = false;
-
-function handleAuthResult(authResult) {
-    if (authDone)
-        return;
-    authDone = true;
+var GCalMgr = function() {
+    var self = this;
+    self.clientId = '327144861423-qvti1t2nnfa1o4n0d2eo9ra3td3ahi01.apps.googleusercontent.com';
+    self.scopes = 'https://www.googleapis.com/auth/calendar';  
+    self.authDone = false;
     
-  var authorizeButton = document.getElementById('authorize-button');
-  if (authResult) {
-    authorizeButton.style.visibility = 'hidden';
-    startApp();
-  } else {
-    authorizeButton.style.visibility = '';
-    authorizeButton.onclick = handleAuthClick;
-   }
+    // Handlers
+    self.handlers = {
+        clientLoad: function() {self.handleClientLoad();},
+        authResult: function(authResult) {self.handleAuthResult(authResult);},
+        checkAuth: function() {self.checkAuth();},
+        authClick: function(e) {self.handleAuthClick(e);},
+        apiLoaded: function() {self.handleApiLoaded();}
+    };
 }
 
-function handleAuthClick(event) {
+GCalMgr.prototype.handleClientLoad = function() {
+    var self = this;
+    window.setTimeout(self.handlers.checkAuth,1);
+    self.handlers.checkAuth();
+}
+
+GCalMgr.prototype.checkAuth = function() {
+    var self = this;
+    gapi.auth.authorize({client_id: self.clientId, scope: self.scopes, immediate: true}, self.handlers.authResult);
+}
+
+GCalMgr.prototype.handleAuthResult = function(authResult) {
+    var self = this;
+    if (self.authDone)
+        return;
+    self.authDone = true;
+    
+    var authorizeButton = document.getElementById('authorize-button');
+    if (authResult) {
+        authorizeButton.style.visibility = 'hidden';
+        self.startApp();
+    } else {
+        authorizeButton.style.visibility = '';
+        authorizeButton.onclick = self.handlers.authClick;
+    }
+}
+
+GCalMgr.prototype.handleAuthClick = function(event) {
   gapi.auth.authorize(
       {client_id: clientId, scope: scopes, immediate: false},
-      handleAuthResult);
+      self.handlers.authResult);
   return false;
 }
 
-var today = new Date();
-var days = 2;
-var endDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
-
-
 /* use a function for the exact format desired... */
-function ISODateString(d){
+GCalMgr.prototype.ISODateString = function(d){
  function pad(n){return n<10 ? '0'+n : n}
  return d.getUTCFullYear()+'-'
       + pad(d.getUTCMonth()+1)+'-'
@@ -52,13 +59,16 @@ function ISODateString(d){
       + pad(d.getUTCSeconds())+'Z'
 }
 
-function fetchEvents(cal, cb) {
+GCalMgr.prototype.fetchEvents = function(cal, cb) {
+    var self = this;
+    var today = new Date();
+    var days = 2;
+    var endDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
+    
     console.log('fetching events for: ', cal.name);
     var params = {
-        timeMin: ISODateString(today),
-        timeMax: ISODateString(endDate),
-        //timeMin: {dateTime: ISODateString(today)},
-        //timeMax: {dateTime: ISODateString(endDate)},
+        timeMin: self.ISODateString(today),
+        timeMax: self.ISODateString(endDate),
         calendarId: cal.id
     }
     var request = gapi.client.calendar.events.list(params);
@@ -67,7 +77,6 @@ function fetchEvents(cal, cb) {
         console.log('response for ' + cal.name);
         console.log('  ' + JSON.stringify(resp));
         if (resp.items) {
-            localStorage[cal.id] = resp;
             resp.items.forEach(function(r) {
                 console.log(' ' + r.summary);
             });
@@ -79,25 +88,24 @@ function fetchEvents(cal, cb) {
     });
 }
 
-function loadDetails(id) {
-    console.log('Details loaded: ' + id);
-}
-
-function fetchAllCalendars() {
+GCalMgr.prototype.fetchAllCalendars = function() {
+    var self = this;
     var calendars = eventMgr.calendars;
     for (cID in calendars) {
         var cal = calendars[cID];
-        fetchEvents(cal, function(events) {
+        self.fetchEvents(cal, function(events) {
             eventMgr.updateCalendarEvents(cal, events);
         });
     }
 }
 
-function apiLoaded() {
+GCalMgr.prototype.handleApiLoaded = function() {
+    var self = this;
     console.log('api loaded');
-    fetchAllCalendars();
+    self.fetchAllCalendars();
 }
 
-function startApp() {
-    gapi.client.load('calendar', 'v3', apiLoaded);
+GCalMgr.prototype.startApp = function() {
+    var self = this;
+    gapi.client.load('calendar', 'v3', self.handlers.apiLoaded);
 }
