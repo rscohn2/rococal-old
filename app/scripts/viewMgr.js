@@ -10,9 +10,9 @@ ViewMgr.prototype.renderEventList = function() {
     var self = this;
     var html = '';
     self.eventList.forEach(function(eID) {
-        html = html + Mustache.render(self.listItemTpl, eventMgr.events[eID]);
+        html = html + Mustache.render(self.tpl.listItem, eventMgr.events[eID]);
     });
-    self.$listUL.html(html);
+    self.container.eventsUL.html(html);
 }
 
 ViewMgr.prototype.makeEventList = function() {  
@@ -24,11 +24,40 @@ ViewMgr.prototype.makeEventList = function() {
     self.eventList = el;
 }
 
+/*
+<h2>{{summary}}</h2>
+<p>{{day}}, {{month}} {{date}}, {{startTime}} {{startAMPM}} - {{endTime}} {{endAMPM}}</p>
+<p>{{location}}</p>
+<p>Calendar: {{calendar}}</p>
+<br>
+<p>{{description}}</p>
+*/
+ViewMgr.prototype.renderDetails = function() {
+    var self = this;
+    var e = eventMgr.events[self.detailsEID];
+    var o = {
+        summary: e.summary,
+        description: e.description,
+        location: e.location,
+        calendar: e.creator.displayName,
+        begin: moment(e.start.dateTime).format('dddd, MMMM D, h:mm A'),
+        end: moment(e.end.dateTime).format('h:mm A')
+    };
+    var html = Mustache.render(self.tpl.eventDetails, o);
+    self.container.detailsDiv.html(html);
+}
+
 // Public functions
 ViewMgr.prototype.domReady = function() {
     var self = this;
-    self.listItemTpl = $('#listItemTpl').html();
-    self.$listUL = $('#eventsList');
+    self.tpl = {
+        listItem: $('#listItemTpl').html(),
+        eventDetails: $('#eventDetailsTpl').html()
+    };
+    self.container = {
+        eventsUL: $('#eventsUL'),
+        detailsDiv: $('#detailsDiv')
+    };
     self.ready = true;
     self.refresh();
 }
@@ -43,6 +72,7 @@ ViewMgr.prototype.refresh = function() {
 
 ViewMgr.prototype.refreshDetails = function(id) {
     var self = this;
-    console.log('Details loaded: ' + id);
+    self.detailsEID = id;
+    self.renderDetails();
 }
 

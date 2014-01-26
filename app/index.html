@@ -37,7 +37,7 @@
             <div id="content">
                 <!-- here is where you can add your panels -->
                 <div title='All Events' id="allEvents" class="panel" selected="true">
-                    <ul id="eventsList" class="list">
+                    <ul id="eventsUL" class="list">
                     </ul>                
                 </div>
                 <div title='Selected Events' id="selectedEvents" class="panel">
@@ -46,6 +46,7 @@
                     <a href='#' id='authorize-button' onclick='handleAuthClick();'>Login</a>
                 </div>
                 <div title="Details" id="details" class="panel">
+                    <div id="detailsDiv"></div>
                 </div>
             </div>
             <!-- bottom navbar. Add additional tabs here -->
@@ -76,6 +77,7 @@
         <script src="bower_components/intel-appframework/jq.appframework.js"></script>
         <script src="bower_components/intel-appframework/ui/appframework.ui.js"></script>
         <script src="bower_components/mustache/mustache.js"></script>
+        <script src="bower_components/moment/moment.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -100,13 +102,23 @@
 </body>
 
 <script id="listItemTpl" type="text/template">
-<li>{{summary}}
+<li><b>{{summary}}</b><br>
+    <small>sfsdfds<br>
+    {{location}}</small>
      <a href="#details" onclick='viewMgr.refreshDetails("{{id}}")' data-transition="pop"></a>
 </li>
 </script>
 
 <script id="eventDetailsTpl" type="text/template">
-<p>{{summary}}</p>
+<h2>{{summary}}</h2>
+<p>{{begin}} - {{end}}</p>
+<p>{{location}}</p>
+<p>Calendar: {{calendar}}</p>
+<br>
+<input type="checkbox" name="Robert" id="Robert">  <label for="Robert">Robert</label>
+<input type="checkbox" name="Amelia" id="Amelia">  <label for="Amelia">Amelia</label>
+<br>
+<p>{{description}}</p>
 </script>
 
 </html>
