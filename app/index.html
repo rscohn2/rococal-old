@@ -37,7 +37,7 @@
             <div id="content">
                 <!-- here is where you can add your panels -->
                 <div title='All Events' id="allEvents" class="panel" selected="true">
-                    <ul id="allEventsList" class="list">
+                    <ul id="eventsList" class="list">
                     </ul>                
                 </div>
                 <div title='Selected Events' id="selectedEvents" class="panel">
@@ -90,9 +90,23 @@
         </script>
 
         <!-- build:js scripts/main.js -->
+        <script src="scripts/viewMgr.js"></script>
+        <script src="scripts/eventMgr.js"></script>
+        <script src="scripts/gcal.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 
         <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </body>
+
+<script id="listItemTpl" type="text/template">
+<li>{{summary}}
+     <a href="#details" onclick='loadDetails("{{id}}")' data-transition="pop"></a>
+</li>
+</script>
+
+<script id="eventDetailsTpl" type="text/template">
+<p>{{summary}}</p>
+</script>
+
 </html>
