@@ -10,7 +10,15 @@ ViewMgr.prototype.renderEventList = function() {
     var self = this;
     var html = '';
     self.eventList.forEach(function(eID) {
-        html = html + Mustache.render(self.tpl.listItem, eventMgr.events[eID]);
+        var e = eventMgr.events[eID];
+        var o = {
+            start: moment(e.start.dateTime).format('h:mm A'),
+            end: moment(e.end.dateTime).format('h:mm A'),
+            location: e.location,
+            summary: e.summary,
+            id: e.id
+        };
+        html = html + Mustache.render(self.tpl.listItem, o);
     });
     self.container.eventsUL.html(html);
 }
@@ -24,14 +32,6 @@ ViewMgr.prototype.makeEventList = function() {
     self.eventList = el;
 }
 
-/*
-<h2>{{summary}}</h2>
-<p>{{day}}, {{month}} {{date}}, {{startTime}} {{startAMPM}} - {{endTime}} {{endAMPM}}</p>
-<p>{{location}}</p>
-<p>Calendar: {{calendar}}</p>
-<br>
-<p>{{description}}</p>
-*/
 ViewMgr.prototype.renderDetails = function() {
     var self = this;
     var e = eventMgr.events[self.detailsEID];

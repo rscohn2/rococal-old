@@ -103,7 +103,7 @@
 
 <script id="listItemTpl" type="text/template">
 <li><b>{{summary}}</b><br>
-    <small>sfsdfds<br>
+    <small>{{start}} - {{end}}<br>
     {{location}}</small>
      <a href="#details" onclick='viewMgr.refreshDetails("{{id}}")' data-transition="pop"></a>
 </li>
@@ -115,9 +115,14 @@
 <p>{{location}}</p>
 <p>Calendar: {{calendar}}</p>
 <br>
-<input type="checkbox" name="Robert" id="Robert">  <label for="Robert">Robert</label>
+<div class="grid">
+<div class="col2"> 
+    <input type="checkbox" name="Robert" id="Robert">  <label for="Robert">Robert</label>
+</div>
+<div class="col2">
 <input type="checkbox" name="Amelia" id="Amelia">  <label for="Amelia">Amelia</label>
-<br>
+</div>
+</div>
 <p>{{description}}</p>
 </script>
 
